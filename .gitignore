@@ -1,0 +1,37 @@
+# D365 F&O — build outputs
+bin/
+obj/
+*.dll
+*.pdb
+*.exe
+*.cache
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# AX / D365 local files
+*.axpp
+*.xpo
+*.xml.bak
+ModelUtil.xml
+AxIgnoreList.xml
+
+# Packages and dependencies
+packages/
+node_modules/
+*.nupkg
+
+# Logs and temp
+*.log
+*.tmp
+*.temp
+Thumbs.db
+.DS_Store
+
+# Source folder (read-only reference — tracked separately or excluded)
+# Uncomment the line below if Source/ is synced externally and should not be committed
+# Source/

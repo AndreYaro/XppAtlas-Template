@@ -1,0 +1,4 @@
+interface:
+  display_name: "D365 Architect"
+  short_description: "D365 F&O integration design, architecture decisions, and technical documentation"
+  default_prompt: "Use $d365-architect to design or review a D365 F&O solution while following AGENTS.md, GEMINI.md, the nearest context_setup.md, and the repository's extension-first architecture rules."

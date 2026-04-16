@@ -1,0 +1,108 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__xppatlas__list_models",
+      "mcp__xppatlas__get_index_metadata",
+      "mcp__xppatlas__get_store_health",
+      "mcp__xppatlas__get_startup_diagnostics",
+      "mcp__xppatlas__search_artifacts",
+      "mcp__xppatlas__search_chunks",
+      "mcp__xppatlas__semantic_search",
+      "mcp__xppatlas__get_artifact",
+      "mcp__xppatlas__get_artifacts",
+      "mcp__xppatlas__explore_artifact",
+      "mcp__xppatlas__build_edit_bundle",
+      "mcp__xppatlas__search_patterns",
+      "mcp__xppatlas__recommend_patterns",
+      "mcp__xppatlas__list_impl_patterns",
+      "mcp__xppatlas__get_impl_pattern",
+      "mcp__xppatlas__search_standard_artifacts",
+      "mcp__xppatlas__explore_standard_artifact",
+      "mcp__xppatlas__get_standard_source",
+      "mcp__xppatlas__search_learn",
+      "mcp__xppatlas__search_community",
+      "mcp__xppatlas__search_blogs",
+      "mcp__xppatlas__get_source",
+      "mcp__xppatlas__explain_standard_source",
+      "mcp__xppatlas__analyze_fdd",
+      "mcp__xppatlas__estimate_change_radius",
+      "mcp__xppatlas__explain_extension_decision",
+      "mcp__xppatlas__propose_extension_strategy",
+      "mcp__xppatlas__propose_extension_strategy_v2",
+      "mcp__xppatlas__rank_extension_points",
+      "mcp__xppatlas__list_extension_decisions",
+      "mcp__xppatlas__build_functional_map",
+      "mcp__xppatlas__build_integration_landscape",
+      "mcp__xppatlas__build_process_blueprint",
+      "mcp__xppatlas__generate_form_spec",
+      "mcp__xppatlas__generate_metadata_spec",
+      "mcp__xppatlas__generate_scaffold",
+      "mcp__xppatlas__build_reasoning_context_tool",
+      "mcp__xppatlas__recommend_action_tool",
+      "mcp__xppatlas__validate_configuration",
+      "mcp__xppatlas__run_validation",
+      "mcp__xppatlas__parse_build_output",
+      "mcp__xppatlas__ingest_build_log",
+      "mcp__xppatlas__list_tasks",
+      "mcp__xppatlas__get_task",
+      "mcp__xppatlas__check_decision_freshness",
+      "mcp__xppatlas__diff_decisions",
+      "mcp__xppatlas__find_contradicting_evidence",
+      "mcp__xppatlas__get_metrics_summary",
+      "Bash(git status)",
+      "Bash(git status -s)",
+      "Bash(git log:*)",
+      "Bash(git diff:*)",
+      "Bash(git show:*)",
+      "Bash(git branch)",
+      "Bash(python tools/ensure_index.py:*)",
+      "Bash(python tools/search_index.py:*)",
+      "Bash(python tools/bootstrap_context.py:*)",
+      "Bash(python tools/index_all.py --incremental:*)"
+    ],
+    "deny": [
+      "Bash(scripts/build-v4-model.bat:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(git reset --hard:*)",
+      "Bash(git checkout --:*)",
+      "Bash(tf:*)"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '{\"systemMessage\": \"{ProjectName} session start: run /start before any discovery. Identify the active task and model from git status, read the task rules.md and SNAPSHOT.md first. Stay inside this repo and inside one model; use mcp__xppatlas__* for all X++ source.\"}'",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '{\"systemMessage\": \"About to compact. Before continuing, update the active task SNAPSHOT.md (changed files, validation status, next steps) so the next session can resume cleanly.\"}'",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python tools/ensure_index.py --quiet > /dev/null 2>&1 && echo '{\"systemMessage\": \"X++ model index checked and refreshed if needed.\"}'",
+            "timeout": 60,
+            "statusMessage": "Checking X++ model index..."
+          }
+        ]
+      }
+    ]
+  }
+}

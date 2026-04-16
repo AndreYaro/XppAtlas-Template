@@ -1,0 +1,4 @@
+interface:
+  display_name: "D365 Developer"
+  short_description: "D365 F&O X++ implementation, fixes, reviews, and code generation"
+  default_prompt: "Use $d365-developer to implement, review, or fix D365 F&O X++ work while following AGENTS.md, GEMINI.md, the nearest context_setup.md, and the Source-versus-Tasks folder rules."
