@@ -1,0 +1,16 @@
+{
+  "//": "XppAtlas MCP server connection for this project. Adjust `command` and `cwd` to point at your local XppAtlas checkout. The stdio transport is used by Claude Code, Codex, VS Code MCP client, and similar tools.",
+  "servers": {
+    "xppatlas": {
+      "type": "stdio",
+      "command": "C:\\Work\\GitHub\\XppAtlas\\.venv\\Scripts\\python.exe",
+      "args": ["-m", "xppatlas", "start"],
+      "cwd": "C:\\Work\\GitHub\\XppAtlas"
+    },
+    "//xppatlas-http": "Uncomment when you have a XppAtlas Standard Server on your LAN. Connects over Streamable HTTP to the /mcp endpoint.",
+    "//xppatlas-http-example": {
+      "type": "http",
+      "url": "http://10.0.0.50:8765/mcp"
+    }
+  }
+}

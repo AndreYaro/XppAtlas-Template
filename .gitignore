@@ -32,6 +32,19 @@ node_modules/
 Thumbs.db
 .DS_Store
 
+# Environment and secrets — never commit .env
+.env
+.env.local
+.env.*.local
+*.pfx
+*.pem
+
+# XppAtlas client data (local stores, workspaces, archives, vector index)
+data/
+
+# Local X++ index cache built by tools/index_all.py
+.claude/index/
+
 # Source folder (read-only reference — tracked separately or excluded)
 # Uncomment the line below if Source/ is synced externally and should not be committed
 # Source/

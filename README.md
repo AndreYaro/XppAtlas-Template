@@ -14,6 +14,8 @@ Clone this template for each new D365 customization project.
   skills/               # 30+ slash commands (/start, /finish, /new-task, etc.)
   hooks/                # SessionStart, PreCompact, Stop
   task-templates/       # analysis, development, bugfix templates
+.vscode/
+  mcp.json              # XppAtlas MCP server connection (stdio or HTTP)
 Models/
   _Model_Template/      # Template for new models
     Tasks/
@@ -27,15 +29,18 @@ Models/
 CLAUDE.md               # Project passport
 GEMINI.md               # X++ naming and coding standards
 context_setup.md        # Project-level configuration
+.env.example            # Client-side XppAtlas config template
 ```
 
 ## Setup
 
 1. Clone this template into your project folder
 2. Edit `context_setup.md`: set `ProjectPrefix`, `LabelFile`, `UserVISA`
-3. Verify XppAtlas MCP server is reachable: `mcp__xppatlas__list_models`
-4. Run `validate-ai-setup.ps1`
-5. Commit: `git commit -m "chore: instantiate template for {ProjectName}"`
+3. Copy `.env.example` to `.env` and set `XPPATLAS_STANDARD_SERVER_URL` (only in server/client split mode) plus embedding options
+4. Verify `.vscode/mcp.json` points at your XppAtlas checkout (stdio) or your LAN server (HTTP)
+5. Verify XppAtlas MCP server is reachable: `mcp__xppatlas__list_models`
+6. Run `validate-ai-setup.ps1`
+7. Commit: `git commit -m "chore: instantiate template for {ProjectName}"`
 
 ## Daily workflow
 
@@ -50,7 +55,10 @@ context_setup.md        # Project-level configuration
 
 ## MCP server
 
-All X++ discovery uses `mcp__xppatlas__*` tools from the XppAtlas MCP server.
+All X++ discovery uses `mcp__xppatlas__*` tools from the XppAtlas MCP server. Two deployment shapes are supported:
+
+- **Local mode** — XppAtlas runs on your workstation; the local server serves every model. Configured via `.vscode/mcp.json` (stdio).
+- **Server/client split** — a shared LAN server hosts standard models behind an HTTP API; your local client proxies standard-model queries to it. Configured via `XPPATLAS_STANDARD_SERVER_URL` in `.env` (plus optional HTTP entry in `.vscode/mcp.json`).
 
 ## Related
 

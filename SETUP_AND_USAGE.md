@@ -39,8 +39,17 @@ Before cloning the template into a customer project you need:
 - **Windows + Git Bash** (the template assumes Unix shell syntax for Bash tool calls on Windows).
 - **Python 3.x** on `PATH` (the hooks call `python tools/ensure_index.py`).
 - **Claude Code** installed, with access to an Anthropic API key or equivalent credential.
-- **D365 MCP server** (`xppatlas`) running locally and reachable via Claude Code's MCP configuration. This is the only path to X++ source — the template will not read from any local `Source/` folder.
+- **XppAtlas MCP server** (`xppatlas`) running locally or reachable on a LAN server. This is the only path to X++ source — the template will not read from any local `Source/` folder. See [XppAtlas](https://github.com/AndreYaro/XppAtlas) for installation.
 - **TFVC workspace** for the customer's production D365 codeline (the user performs check-ins outside Claude). This is *not* driven by Claude — the template only prepares check-in comments.
+
+### 2.1. XppAtlas deployment modes
+
+XppAtlas supports two deployment shapes that the template works with transparently:
+
+- **Local mode** — the MCP server runs on the developer's own machine and serves every model (standard, vendor, custom) from local databases. Simplest setup; heaviest disk and RAM footprint.
+- **Server/client split** — a shared Ubuntu LAN server hosts the large standard models (ApplicationSuite, ApplicationFoundation, …) behind an HTTP API; each developer's local client handles only the customer's custom + vendor models and proxies standard-model queries to the server. Recommended for teams larger than one or two developers.
+
+The template does not care which mode you run — both expose the same `mcp__xppatlas__*` tool surface. The split is configured in `.env` (see §3.2 below) and in `.vscode/mcp.json`.
 
 ---
 
@@ -69,6 +78,12 @@ Edit these files and replace the `{Placeholders}`:
 - **`CLAUDE.md`** — replace `{ProjectName}` and `{ModelName}` with the real names. Update the short description paragraph at the top to describe what the customer does and which models are in scope.
 - **`README.md`** — replace `{ProjectName}`, `{Organization}`, `{ProjectPrefix}`, `{LabelFile}`, `{LabelLanguages}`, `{UserVISA}` in the overview table.
 - **`.claude/settings.json`** — in the `SessionStart` hook message, replace `{ProjectName}` and `{ModelName}` so the session-start reminder is specific to this project.
+- **`.env`** — copy `.env.example` to `.env` and fill in:
+  - `XPPATLAS_STANDARD_SERVER_URL` — only if you are in server/client split mode; leave blank for local mode.
+  - `XPPATLAS_SOURCE_ROOT` — path to this project's custom/vendor model source tree.
+  - `OPENAI_API_KEY` or `XPPATLAS_EMBEDDING_MODEL` — pick an embedding option.
+  The `.env` file is gitignored and must never be committed.
+- **`.vscode/mcp.json`** — verify the `command` and `cwd` point at your local XppAtlas checkout (stdio mode). If you are using server/client split over HTTP, uncomment and edit the `xppatlas-http` entry to point at the LAN server's `/mcp` endpoint.
 
 ### 3.3. Create one folder per model
 
