@@ -25,7 +25,7 @@ Parse `$ARGUMENTS` as a topic or artifact name (e.g. `CustInvoiceJour posting fl
    - `explore_artifact` — for deep object inspection (fields, methods, relations, delegates)
    - `search_chunks` — for finding specific code patterns across the codebase
    - `search_patterns` / `recommend_patterns` — for established implementation patterns
-   - `search_standard_artifacts` — for standard D365 reference implementations
+   - `search_artifacts(model_name="ApplicationSuite")` — for standard D365 reference implementations (scan top-5 for exact-name match per `tool-usage.md`; inspect `meta.standard_server.status` — on non-`ok`, fall through the cascade in `fallback-and-evidence.md`)
    - `estimate_change_radius` — for impact analysis
    - `propose_extension_strategy` — for extension point analysis
 

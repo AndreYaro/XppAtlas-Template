@@ -19,7 +19,7 @@ Parse `$ARGUMENTS` as the target artifact name (e.g. `CustInvoiceJour`, `SalesFo
    - `explore_artifact` — list all methods, fields, relations, delegates, events
    - `search_chunks` — find existing CoC and event handlers targeting this artifact (in the active model and across models)
    - `propose_extension_strategy` or `rank_extension_points` — get MCP-recommended extension approach
-   - `search_standard_artifacts` — understand the standard behavior being extended
+   - `search_artifacts(model_name="ApplicationSuite")` or `explore_artifact` — understand the standard behavior being extended (scan top-5 for exact-name match per `tool-usage.md`; inspect `meta.standard_server.status` — on non-`ok`, fall through the cascade in `fallback-and-evidence.md`)
 
 3. **Evaluate extension options** against the priority order from `project-main.md`:
 

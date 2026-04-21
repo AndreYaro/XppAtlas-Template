@@ -99,14 +99,14 @@ At the start of a task:
 3. Read repo or folder `AGENTS.md` instructions if present.
 4. Identify project-specific constraints, naming conventions, reference paths, integration context, and documentation expectations.
 5. Determine whether the task is architecture review, integration design, decision analysis, full design document creation, risk assessment, or blueprint validation.
-6. Use the D365 MCP search server first to discover existing code patterns, framework usage, extension points, and prior implementations that should inform the design.
+6. Use the XppAtlas MCP server (`mcp__xppatlas__*`) first to discover existing code patterns, framework usage, extension points, and prior implementations that should inform the design. Scan top-5 for exact-name matches; inspect `meta.standard_server.status` and fall through the cascade in `.claude/rules/fallback-and-evidence.md` on non-`ok`.
 
 If required design context is missing, ask at most **one targeted clarifying question** only when it materially changes the design choice. Otherwise make the safest architecture assumption, state it clearly, and proceed.
 
 ### Discovery workflow
 
 When architecture advice depends on how the system is already implemented:
-- use the D365 MCP search server first for code and pattern discovery
+- use the XppAtlas MCP server (`mcp__xppatlas__*`) first for code and pattern discovery — always pass `model_name`; scan top-5 for exact-name matches; tag factual claims with evidence labels per `fallback-and-evidence.md`
 - search for existing services, entities, batch classes, integrations, helper classes, and extension examples before recommending a new design
 - use model indexes for navigation and cross-model impact analysis
 - verify important claims against the real XML/X++ source before prescribing implementation details

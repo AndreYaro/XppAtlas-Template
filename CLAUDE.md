@@ -1,13 +1,15 @@
 # {ProjectName} — Claude Code Project Passport
 
-D365 F&O customizations project. Replace `{ProjectName}`, `{ModelName}`, and `{ProjectPrefix}` when cloning into a new customer project. Model source of truth is the **D365 MCP server** (`mcp__xppatlas__*`). All new work lives under `Models/{ModelName}/Tasks/{TaskID}_{Name}/`.
+D365 F&O customizations project. Replace `{ProjectName}`, `{ModelName}`, and `{ProjectPrefix}` when cloning into a new customer project. Model source of truth is the **XppAtlas MCP server** (`mcp__xppatlas__*`). In server/client split mode this project is always the client; see [`.claude/rules/split-mode.md`](.claude/rules/split-mode.md) for Phase 28 transparent-client invariants. All new work lives under `Models/{ModelName}/Tasks/{TaskID}_{Name}/`.
 
 ## Session protocol
 
 1. **Run `/start`.** Identify the active task and model from `git status`. Read the task's `rules.md` (task type) and `SNAPSHOT.md` (working memory) before any discovery.
 2. **Read the project rules** in `.claude/rules/`:
    - `project-main.md` — rule hierarchy, X++ principles, coding standards
-   - `tool-usage.md` — MCP discovery workflow, tool guidance
+   - `tool-usage.md` — MCP discovery workflow, exact-match discipline, SysOp pivot, evidence labels
+   - `split-mode.md` — Phase 28 transparent-client read/write plane invariants
+   - `fallback-and-evidence.md` — **no-abort on remote MCP failure**, cascade, evidence-label vocabulary
    - `safety-boundaries.md` — confirmation boundaries, hard limits
    - `task-lifecycle.md` — artifact lifecycle, snapshot discipline, checkpoint triggers
 3. **Read model rules** at `Models/{ModelName}/rules.md` if they exist.
@@ -52,16 +54,19 @@ Read the nearest `context_setup.md` (task level first, then model, then project)
 | `LabelLanguages` | Translation targets |
 | `UserVISA` | Used in TODO markers and check-in comments |
 
-## D365 MCP workflow
+## XppAtlas MCP workflow
 
 1. Intent-style lookup → `semantic_search` or `search_patterns`
-2. Known object → `search_artifacts` (always pass `model_name`)
+2. Known object → `search_artifacts` (always pass `model_name`; **scan top-5 for exact-name match, do not trust #1**)
 3. Code search → `search_chunks`
 4. Deep inspection → `explore_artifact`
 5. Full source → `get_artifact` or `build_edit_bundle`
-6. Pattern reuse → `recommend_patterns`
+6. Symbol existence check → `check_symbol` before emitting code that references a member/field/enum value
+7. Pattern reuse → `recommend_patterns`
 
 **Before generating any AOT XML**, load a reference example from MCP first.
+
+**On `meta.standard_server.status != "ok"`**: never abort. Inspect `meta.standard_server_detail.reason` and fall through the cascade in `.claude/rules/fallback-and-evidence.md` (retry-once on `timeout`, stop on `unauthorized`, otherwise Standard Pack cache → cached names → ask user). Label every factual claim `[MCP-confirmed]` / `[standard-pack-cached]` / `[inferred]` / `[user-provided]` per the doctrine.
 
 ## Project layout
 

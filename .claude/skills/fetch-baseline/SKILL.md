@@ -1,13 +1,13 @@
 ---
 name: fetch-baseline
-description: Fetch the current (untouched) version of one or more AOT artifacts from the D365 MCP server into the active task folder, so the user can commit the baseline before edits begin. Usage: /fetch-baseline AxClass:Foo AxTable:Bar AxForm:Baz
+description: Fetch the current (untouched) version of one or more AOT artifacts from the XppAtlas MCP server into the active task folder, so the user can commit the baseline before edits begin. Usage: /fetch-baseline AxClass:Foo AxTable:Bar AxForm:Baz
 ---
 
 # /fetch-baseline
 
 Pull artifacts from MCP into the active task's `code/Ax{Type}/` folder **byte-for-byte**. The user then commits those files as the baseline "before" state. Only after that commit may Claude edit them.
 
-The D365 MCP server (`mcp__xppatlas__*`) is the **only** source of truth for X++ source. This skill never reads from a local `Source/` folder and never reaches into a sibling repo.
+The XppAtlas MCP server (`mcp__xppatlas__*`) is the **only** source of truth for X++ source. This skill never reads from a local `Source/` folder and never reaches into a sibling repo. On `meta.standard_server.status != "ok"` / `meta.standard_server_detail.reason != "none"`, handle per `.claude/rules/fallback-and-evidence.md` (retry once on `timeout`, stop on `unauthorized`, otherwise fall through the cascade — **never abort the baseline fetch silently**).
 
 ## Arguments
 

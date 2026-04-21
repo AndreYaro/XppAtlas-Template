@@ -5,7 +5,7 @@ description: Explain a D365 F&O concept, pattern, or API with a practical code e
 
 Explain the D365 F&O topic given in `$ARGUMENTS`.
 
-Before explaining implementation details or showing code, use the D365 MCP search server first to find real project or standard examples of the pattern. Use model indexes for navigation when helpful, then confirm important details in the real XML/X++ source.
+Before explaining implementation details or showing code, use the XppAtlas MCP server (`mcp__xppatlas__*`) first to find real project or standard examples of the pattern. Scan top-5 for exact-name matches per `.claude/rules/tool-usage.md`; inspect `meta.standard_server.status` — on non-`ok`, fall through the cascade in `.claude/rules/fallback-and-evidence.md`. Use model indexes for navigation when helpful, then confirm important details in the real XML/X++ source.
 
 ## Arguments
 Parse `$ARGUMENTS` as: `{Topic}` (e.g. `Chain of Command`, `SysOperationFramework`, `Business Events`, `OData`)

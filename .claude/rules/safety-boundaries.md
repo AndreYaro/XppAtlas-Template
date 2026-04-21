@@ -2,7 +2,7 @@
 
 ## Hard repo boundary
 
-This session operates inside **this repository only**. Never read, write, or execute inside sibling repos (XppAtlas source store, AI tools repo, other customer repos). The **only** way to reach X++ source outside this repo is through the D365 MCP server.
+This session operates inside **this repository only**. Never read, write, or execute inside sibling repos (XppAtlas source store, AI tools repo, other customer repos). The **only** way to reach X++ source outside this repo is through the XppAtlas MCP server (`mcp__xppatlas__*`).
 
 Specifically:
 - Do not open a file whose absolute path leaves this repository root

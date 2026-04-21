@@ -15,7 +15,7 @@ Use this file to:
 
 A prebuilt `.claude/` configuration plus a `Models/` layout that enforces four rules:
 
-- **MCP is the only authoritative source of X++ code.** All discovery and all baseline fetches go through the local D365 MCP server (`mcp__xppatlas__*`). No local `Source/` folder is read. No sibling repo is read.
+- **MCP is the only authoritative source of X++ code.** All discovery and all baseline fetches go through the XppAtlas MCP server (`mcp__xppatlas__*`). In split mode the client transparently merges local CUSTOM/VENDOR with remote STANDARD; every fan-out-capable response carries a `meta.standard_server` envelope. No local `Source/` folder is read. No sibling repo is read. See `.claude/rules/split-mode.md` + `.claude/rules/fallback-and-evidence.md`.
 - **One task = one folder = one model.** Each task lives under `Models/{ModelName}/Tasks/{TaskID}_{TaskName}/` and never spills into another model.
 - **Baseline before edit.** For any task that modifies existing artifacts, the untouched current version is fetched from MCP and committed to Git *before* any edit is made. The task's real change set is then the Git diff from that baseline commit.
 - **Per-task SNAPSHOT.md is the cross-session memory.** Every task owns a `SNAPSHOT.md` that survives compactions and hand-offs between Claude sessions. There is no global snapshot file.
@@ -99,7 +99,7 @@ Copy `Models/_Model_Template/context_setup.md` as the starting point for each mo
 
 Single-model projects have exactly one folder here; multi-model projects (e.g. a core model plus integration models) have one folder per model.
 
-### 3.4. Verify the D365 MCP server is reachable
+### 3.4. Verify the XppAtlas MCP server is reachable
 
 Inside Claude Code, ask:
 
@@ -107,7 +107,13 @@ Inside Claude Code, ask:
 Use mcp__xppatlas__list_models to list every model the MCP server knows about.
 ```
 
-If the list does not include your target model(s), stop — the MCP server is not indexing the right source. Fix the MCP configuration before doing anything else. The template will refuse to read from local `Source/` folders, so if MCP is broken, nothing else will work.
+Inspect the response:
+
+- `meta.standard_server.status == "ok"` — split mode is healthy; local + remote catalogs merged.
+- `meta.standard_server.status == "not_configured"` — local mode; `XPPATLAS_STANDARD_SERVER_URL` is blank in `.env`. Fine for local-only projects.
+- `meta.standard_server.status == "unreachable"` — the server is configured but not responding. Inspect `meta.standard_server_detail.reason` and fix per `.claude/rules/split-mode.md`. Skills will still work against cached evidence via `.claude/rules/fallback-and-evidence.md`.
+
+If the list does not include your target model(s) and the envelope is `ok`, stop — the MCP server is not indexing the right source. Fix the MCP configuration before doing anything else. The template will refuse to read from local `Source/` folders, so if MCP is broken, nothing else will work.
 
 ### 3.5. Validate the setup
 

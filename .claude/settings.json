@@ -16,9 +16,8 @@
       "mcp__xppatlas__recommend_patterns",
       "mcp__xppatlas__list_impl_patterns",
       "mcp__xppatlas__get_impl_pattern",
-      "mcp__xppatlas__search_standard_artifacts",
-      "mcp__xppatlas__explore_standard_artifact",
-      "mcp__xppatlas__get_standard_source",
+      "mcp__xppatlas__check_symbol",
+      "mcp__xppatlas__list_standard_releases",
       "mcp__xppatlas__search_learn",
       "mcp__xppatlas__search_community",
       "mcp__xppatlas__search_blogs",
@@ -94,7 +93,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "echo '{\"systemMessage\": \"{ProjectName} session start: run /start before any discovery. Identify the active task and model from git status, read the task rules.md and SNAPSHOT.md first. Stay inside this repo and inside one model; use mcp__xppatlas__* for all X++ source.\"}'",
+            "command": "echo '{\"systemMessage\": \"{ProjectName} session start: run /start before any discovery. Identify the active task and model from git status, read the task rules.md and SNAPSHOT.md first. Stay inside this repo and inside one model; use mcp__xppatlas__* for all X++ source. Scan top-5 for exact-name matches. On meta.standard_server.status != ok, fall through the cascade in fallback-and-evidence.md — never abort silently.\"}'",
             "timeout": 5
           }
         ]

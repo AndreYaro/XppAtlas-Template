@@ -12,6 +12,17 @@ Rules are layered. A narrower scope always overrides a broader one.
 
 If a task rule contradicts a project rule, the task rule wins. If a model rule is silent on a topic, the project rule applies. All three layers share the same safety boundaries (see `safety-boundaries.md`).
 
+### Always-on rules (read every session)
+
+The following project rules apply to every session and every task type. Read them at `/start`:
+
+- [`project-main.md`](project-main.md) — this file
+- [`safety-boundaries.md`](safety-boundaries.md) — confirmation boundaries, hard limits
+- [`tool-usage.md`](tool-usage.md) — MCP tool discipline, exact-match ranking, SysOp pivot
+- [`split-mode.md`](split-mode.md) — Phase 28 transparent-client read/write plane invariants
+- [`fallback-and-evidence.md`](fallback-and-evidence.md) — **no-abort on remote MCP failure**, evidence-label vocabulary, cascade
+- [`task-lifecycle.md`](task-lifecycle.md) — task state machine, handoff discipline
+
 ## Task-centric operating model
 
 All work lives inside a task. A task lives inside exactly one model.

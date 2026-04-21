@@ -85,14 +85,14 @@ At the start of a task:
 3. Read repo or folder `AGENTS.md` instructions if present.
 4. Identify `ProjectPrefix`, `UserVISA`, `LabelFile`, `code_path`, and any project-specific overrides.
 5. Determine whether the task is a bug fix, feature, review, scaffold request, performance issue, integration change, report change, batch change, posting change, security change, or metadata issue.
-6. Use the D365 MCP search server first to locate existing code, standard framework examples, extension points, and established patterns relevant to the task.
+6. Use the XppAtlas MCP server (`mcp__xppatlas__*`) first to locate existing code, standard framework examples, extension points, and established patterns relevant to the task. Scan top-5 for exact-name matches; inspect `meta.standard_server.status` and fall through the cascade in `.claude/rules/fallback-and-evidence.md` on non-`ok`.
 
 If `context_setup.md` is absent, do not invent values. Request the missing context before generating project-specific code that depends on `ProjectPrefix`, `UserVISA`, or label conventions.
 
 ### Code and pattern search workflow
 
 Before proposing or writing X++ changes:
-- use the D365 MCP search server first for code and pattern discovery
+- use the XppAtlas MCP server (`mcp__xppatlas__*`) first for code and pattern discovery — always pass `model_name`; scan top-5 for exact-name matches; tag factual claims with evidence labels per `fallback-and-evidence.md`
 - search for exact objects, helper classes, references, and intent-style patterns before scanning raw source broadly
 - use model indexes for navigation and impact analysis after or alongside MCP discovery
 - confirm final implementation details in the real XML/X++ source before editing

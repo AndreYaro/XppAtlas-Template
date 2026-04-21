@@ -60,6 +60,27 @@ All X++ discovery uses `mcp__xppatlas__*` tools from the XppAtlas MCP server. Tw
 - **Local mode** — XppAtlas runs on your workstation; the local server serves every model. Configured via `.vscode/mcp.json` (stdio).
 - **Server/client split** — a shared LAN server hosts standard models behind an HTTP API; your local client proxies standard-model queries to it. Configured via `XPPATLAS_STANDARD_SERVER_URL` in `.env` (plus optional HTTP entry in `.vscode/mcp.json`).
 
+## Transparent client read/write plane (Phase 28, ADR-018)
+
+In split mode this template is **always the client side**. The platform transparently merges the local catalog (VENDOR + CUSTOM) with the remote catalog (STANDARD) so you work against **one unified tool surface**, not two:
+
+- **Read plane — local ∪ remote, auto-routed.** `list_models`, `semantic_search` (empty `model_name`), `search_artifacts` / `search_chunks` / `get_artifact` / `explore_artifact` / `check_symbol`, and the curated list/search tools all fan out. Results carry `source: "local" \| "remote"` and remote entries carry `writable: false`.
+- **Write plane — local-only, explicitly guarded.** `propose_extension_strategy`, `propose_extension_strategy_v2`, and `reevaluate_decision` reject STANDARD targets with `"Standard model is read-only from this client. Target a local custom artifact instead."` The fix is re-anchoring the extension onto a `{ProjectPrefix}` artifact, never bypassing the guard.
+- **Deprecated tools.** `search_standard_artifacts`, `explore_standard_artifact`, `get_standard_source` are shim-only (one release cycle); the unified tools with `model_name` scoping replace them.
+
+Every fan-out-capable response carries a `meta.standard_server` envelope so the client knows whether the STANDARD side was consulted:
+
+```json
+"meta": {
+  "standard_server": { "status": "ok" | "unreachable" | "not_configured" },
+  "standard_server_detail": { "reason": "timeout" | "connect" | "http" | "unauthorized" | "empty" | "other" | "none" }
+}
+```
+
+A successful-looking response with `status != "ok"` means **the standard plane was not reached** — the list may be incomplete. The client never treats this as authoritative absence. Skills must fall through the cascade defined in [`.claude/rules/fallback-and-evidence.md`](.claude/rules/fallback-and-evidence.md) (MCP live → Standard Pack cache → cached names → ask user), and the split-mode invariants in [`.claude/rules/split-mode.md`](.claude/rules/split-mode.md).
+
+Tuning knobs for unreachable behaviour live in `.env.example` (timeout, retry-on-timeout, soft-unreachable). See ADR-018 in the XppAtlas repo for the full design.
+
 ## Related
 
 - [XppAtlas](https://github.com/AndreYaro/XppAtlas) — Knowledge platform (server + client)
